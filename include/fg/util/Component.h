@@ -63,7 +63,7 @@ namespace fog
     struct ConstructorTraits;
 
     template <typename R, typename... Args>
-    struct ConstructorTraits<R(Args...)>
+    struct ConstructorTraits<R(*)(Args...)>
     {
         using Type = R;
         using ArgsTuple = std::tuple<Args...>;
@@ -502,8 +502,8 @@ namespace fog
             static typename std::enable_if_t<!std::is_abstract_v<T> && hasInject<T>::value, T *> createInstance(IJ &&ij)
             {
 
-                using ArgsTuple = typename ConstructorTraits<T::Inject>::ArgsTuple;
-                constexpr int N = ConstructorTraits<T::Inject>::arity;
+                using ArgsTuple = typename ConstructorTraits<std::add_pointer_t<typename T::Inject>>::ArgsTuple;
+                constexpr int N = ConstructorTraits<std::add_pointer_t<typename T::Inject>>::arity;
                 return createInstanceByConstructor<T, ArgsTuple>(ij, std::make_index_sequence<N>{});
 
                 // static_assert(N < 2, "todo more than 1 element in args list.");

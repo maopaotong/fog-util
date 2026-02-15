@@ -59,14 +59,24 @@ namespace fog
 
             Option(const Option &opt) : name(opt.name),valueType(opt.valueType)
             {
-                this->copy = opt.copy;
-                this->destructor = opt.destructor;
-                this->valuePtr = this->copy();
-                this->value = opt.value;
+                doCopy(opt);
             }; // copy
 
             Option(Option &&opt) : name(opt.name),valueType(opt.valueType)
             {
+                doMove(opt);
+                
+            }; // move
+            private:
+            void doCopy(const Option &opt){
+
+                this->copy = opt.copy;
+                this->destructor = opt.destructor;
+                this->valuePtr = this->copy();
+                this->value = opt.value;
+            }
+
+            void doMove(Option &opt){
                 this->copy = opt.copy;
                 this->destructor = opt.destructor;
                 this->valuePtr = opt.valuePtr;
@@ -76,17 +86,26 @@ namespace fog
                 opt.valuePtr = opt.copy();
                 opt.value = []() -> std::any
                 { throw std::runtime_error("empty value."); };
-                
-            }; // move
-
+            }
+            
+            public:
+            
             Option &operator=(const Option &opt)
             {
-                return Option(opt);
+                this->name = opt.name;
+                this->valueType = opt.valueType;
+                //
+                doCopy(opt);
+                return *this;
             }; // copy assign
 
             Option &operator=(Option &&opt)
             {
-                return Option(opt);
+                this->name = opt.name;
+                this->valueType = opt.valueType;
+                //
+                doMove(opt);
+                return *this;
             }; // move assign
 
             template <typename T>
@@ -141,7 +160,7 @@ namespace fog
         }
         Option *getOption(std::string name)
         {
-            auto &it = options.find(name);
+            const auto &it = options.find(name);
             if (it == options.end())
             {
                 return nullptr;

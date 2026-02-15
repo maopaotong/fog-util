@@ -358,32 +358,32 @@ namespace fog
             return {};
         }
 
-        template <typename F>
-        void addType(std::type_index ifType, F &&func) // add a interface type for the component.
-        {
-            auto it = obj.find(typeid(T));
-            if (it != obj.end())
-            {
-                throw std::runtime_error("type already exists, cannot add same type for a component.");
-            }
-            obj.emplace(ifType, func);
-        }
+        // template <typename F>
+        // void addType(std::type_index ifType, F &&func) // add a interface type for the component.
+        // {
+        //     auto it = obj.find(typeid(T));
+        //     if (it != obj.end())
+        //     {
+        //         throw std::runtime_error("type already exists, cannot add same type for a component.");
+        //     }
+        //     obj.emplace(ifType, func);
+        // }
 
-        template <typename F>
-        void forEachInterfaceType(F &&visit)
-        {
-            for (auto it = obj.begin(); it != obj.end(); it++)
-            {
-                visit(it->first);
-            }
-        }
+        // template <typename F>
+        // void forEachInterfaceType(F &&visit)
+        // {
+        //     for (auto it = obj.begin(); it != obj.end(); it++)
+        //     {
+        //         visit(it->first);
+        //     }
+        // // }
 
-        template <typename T>
-        bool hasType()
-        {
-            std::type_index tid = typeid(T);
-            return this->obj.find(tid) != this->obj.end();
-        }
+        // template <typename T>
+        // bool hasType()
+        // {
+        //     std::type_index tid = typeid(T);
+        //     return this->obj.find(tid) != this->obj.end();
+        // }
 
         template <typename T, typename Imp, typename Tuple, std::size_t I>
         static void registerInterface(Object &obj, UsageFunc createAsPtr)

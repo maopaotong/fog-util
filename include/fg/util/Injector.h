@@ -90,12 +90,12 @@ namespace fog
             return ij.getComponent(typeid(T)).get<T>(usgR);
         }
 
-        template <typename T>
-        bool hasBind()
-        {
-            auto it = factories.find(typeid(T));
-            return it != factories.end();
-        }
+        // template <typename T>
+        // bool hasBind()
+        // {
+        //     auto it = factories.find(typeid(T));
+        //     return it != factories.end();
+        // }
 
         template <typename T, typename C, typename F>
         void bindArgOfConstructor(F &&func)
